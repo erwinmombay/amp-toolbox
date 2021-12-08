@@ -67,6 +67,9 @@ const {calculateHost} = require('../RuntimeHostHelper');
 class RewriteAmpUrls {
   constructor(config) {
     this.esmModulesEnabled = config.esmModulesEnabled !== false;
+    // We want this to be off by default as it is in experimental and we
+    // want this to be "opt-in".
+    this.optimizeAmpStory = config.optimizeAmpStory === true;
     this.log = config.log;
   }
   transform(root, params) {
@@ -80,6 +83,8 @@ class RewriteAmpUrls {
     let referenceNode = findMetaViewport(head);
     const esm = this.esmModulesEnabled || params.esmModulesEnabled;
     params.esmModulesEnabled = esm;
+    const optimizeAmpStory = this.optimizeAmpStory || params.optimizeAmpStory;
+    params.optimizeAmpStory = optimizeAmpStory;
     const preloadEnabled = !hasAttribute(html, 'i-amphtml-no-boilerplate');
     const preloads = [];
 
